@@ -11,3 +11,5 @@ print(f("""
 ```
 
 Day 4 star 1 is written in [Trilangle](https://github.com/bbrk24/Trilangle), which doesn't have functions. Instead, that file is a full program that reads the input from stdin.
+
+Day 8 star 1 is written in bash. The function writes the result to stdout rather than returning it.
