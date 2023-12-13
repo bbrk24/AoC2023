@@ -13,3 +13,5 @@ print(f("""
 Day 4 star 1 is written in [Trilangle](https://github.com/bbrk24/Trilangle), which doesn't have functions. Instead, that file is a full program that reads the input from stdin.
 
 Day 8 is written in bash. The function writes the result to stdout rather than returning it.
+
+Day 12 is written in Mercury. Rather than a `func f(string::in) = (int::out)`, it provides a `pred f(string::in, int::out)`.
