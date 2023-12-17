@@ -1,0 +1,32 @@
+splitIntoPatterns := (str: string) -> str.split /\n{2,}/gu
+
+splitIntoRows := (str: string) -> str.split '\n'
+
+makeColumns := (str: string) ->
+    arr := splitIntoRows str
+    rowLen := arr[0].length
+    for i of [0...rowLen]
+        arr.map &[i]
+            .join ''
+
+indexOfSymmetry := (pattern: string[]) ->
+    :outer for i of [0...(pattern.length - 1)]
+        for j of [0..i]
+            mirrorIndex := 2 * i - j + 1
+            continue if mirrorIndex >= pattern.length
+            continue outer if pattern[mirrorIndex] is not pattern[j]
+        return i + 1
+    null
+
+patternScore := (pattern: string) ->
+    rows := splitIntoRows pattern
+    row := indexOfSymmetry rows
+    return row * 100 if row?
+    columns := makeColumns pattern
+    column := indexOfSymmetry columns
+    return column
+
+f := (str: string) ->
+    splitIntoPatterns str
+        .map patternScore
+        .reduce (a, b) => a + b, 0

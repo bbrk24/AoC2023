@@ -1,0 +1,54 @@
+splitIntoPatterns := (str: string) -> str.split /\n{2,}/gu
+
+splitIntoRows := (str: string) -> str.split '\n'
+
+makeColumns := (str: string) ->
+    arr := splitIntoRows str
+    rowLen := arr[0].length
+    for i of [0...rowLen]
+        arr.map &[i]
+            .join ''
+
+// issues #862, #864 affect this function
+zip .= <T>(a: Iterable<T>, b: Iterable<T>) ->
+    iter1 := a[Symbol.iterator]()
+    iter2 := b[Symbol.iterator]()
+
+    next1 .= iter1.next()
+    next2 .= iter2.next()
+
+    while not next1.done and not next2.done
+        yield [next1.value, next2.value]
+        next1 = iter1.next()
+        next2 = iter2.next()
+    ;
+
+numberDifferent := (a: string, b: string) ->
+    i .= 0
+    for [x, y] of zip a, b
+        ++i if x is not y
+    i
+
+indexOfNearSymmetry := (pattern: string[]) ->
+    :outer for i of [0...(pattern.length - 1)]
+        diff .= 0
+        for j of [0..i]
+            mirrorIndex := 2 * i - j + 1
+            continue if mirrorIndex >= pattern.length
+            diff += numberDifferent pattern[mirrorIndex], pattern[j]
+            break if diff > 1
+        return i + 1 if diff is 1
+    null
+
+patternScore := (pattern: string) ->
+    rows := splitIntoRows pattern
+    row := indexOfNearSymmetry rows
+    return row * 100 if row?
+    columns := makeColumns pattern
+    column := indexOfNearSymmetry columns
+    return column
+
+f := (str: string) ->
+    splitIntoPatterns str
+        .map patternScore
+        .reduce (a, b) => a + b, 0
